@@ -1,17 +1,19 @@
 require 'rspec'
+require '.\symbol'
+require '.\estrategias'
 require '.\trait_builder'
 require '.\trait'
 require '.\class'
 
 #definimos un trait...
 Trait.define do
-  name :MiTrait
+  nombre :MiTrait
 
-  method :metodo1 do
+  metodo :metodo1 do
     "hola"
   end
 
-  method :metodo2 do |un_numero|
+  metodo :metodo2 do |un_numero|
     un_numero * 0 + 42
   end
 
@@ -19,18 +21,18 @@ end
 
 #estre trait tiene el mismo 'metodo1' que el trait definido arriba
 Trait.define do
-  name :TraitConMetodoRepetido
+  nombre :TraitConMetodoRepetido
 
-  method :metodo1 do
+  metodo :metodo1 do
     "mundo"
   end
 end
 
 #el chiste de este trait es que llama a un metodo 'requerimiento' sin definirlo
 Trait.define do
-  name :TraitConRequerimiento
+  nombre :TraitConRequerimiento
 
-  method :metodoConRequerimiento do
+  metodo :metodoConRequerimiento do
     requerimiento
   end
 
@@ -38,15 +40,15 @@ end
 
 #otro trait con un metodo que devuelve un string, va a jugar con el trait de arriba
 Trait.define do
-  name :TraitQueLlenaRequerimiento
+  nombre :TraitQueLlenaRequerimiento
 
-  method :requerimiento do
+  metodo :requerimiento do
     "requerimiento cumplido"
   end
 end
 
 
-describe 'Tests de traits' do
+describe 'Tests de traits' do #son tests de integracion...
 
   it 'Uso un trait en una clase y pruebo llamar a uno de sus metodos con parametros' do
 
@@ -133,14 +135,11 @@ describe 'Tests de traits' do
 
   it 'Los metodos quedan definidos en un trait de scope global' do
 
-    #recordar que 'los metodos' son un diccionario clave valor
-    #y que estan definidos como constante en Object (con scope global)
-    MiTrait.metodos.has_key?(:metodo1).should == true
-    MiTrait.metodos.has_key?(:metodo2).should == true
+    MiTrait.nombre.should == :MiTrait
 
   end
 
-  it 'No se puede llamar "uses" sin argumentos definiendo una clase' do
+  it 'No se puede llamar "uses" sin argumentos en la definicion de una clase' do
 
     expect{
 
@@ -178,17 +177,104 @@ describe 'Tests de traits' do
 
   end
 
-  it 'Puedo llamar a "uses" con cualquier numero de traits traits' do
+  #de paso vemos si se puede complir un requerimiento entre traits
+  it 'Puedo llamar a "uses" con cualquier numero de traits' do
 
-    class Y
+    class I
       uses TraitConRequerimiento, TraitQueLlenaRequerimiento
     end
 
-    objeto = Y.new
+    objeto = I.new
 
     objeto.metodoConRequerimiento.should == "requerimiento cumplido"
 
 
   end
+
+  it 'Puedo sumar traits' do
+
+    class J; uses TraitConRequerimiento + TraitQueLlenaRequerimiento; end
+
+    o = J.new
+
+    o.requerimiento.should == "requerimiento cumplido"
+
+  end
+
+  it 'La suma se rompe si hay definidos metodos iguales' do
+
+    expect{
+
+      class J
+        uses MiTrait + MiTrait
+      end
+
+    }.to raise_error 'Hay metodos conflictivos entre traits'
+
+  end
+
+  it 'La resta remueve metodos' do
+
+    class K
+      uses MiTrait - :metodo1
+    end
+
+    o = K.new
+
+    #el metodo nunca queda definido...
+    expect{ o.metodo1 }.to raise_error NoMethodError
+  end
+
+  it 'Cambiar selectores cambia el nombre del metodo definido' do
+
+    class L
+      uses MiTrait << (:metodo1 >> :saludo)
+    end
+
+    o = L.new
+
+    o.saludo.should == "hola"
+
+  end
+
+end
+
+describe 'Test del TraitBuilder' do
+
+  it 'Hacer un trait con un bloque' do
+
+    trait = TraitBuilder.conBloque { nombre :Nombre }
+
+    trait.nombre.should == :Nombre
+
+  end
+
+  it 'Construir un trait con un bloque y no poner nombre tira excepcion' do
+
+    expect{ TraitBuilder.conBloque do;  end; }.to raise_error 'No puede crearse un trait sin nombre'
+
+  end
+
+  it 'Construir un trait con un bloque y no poner nombre, aunque pongas metodos, tira excepcion' do
+
+    expect{ TraitBuilder.conBloque do; metodo :metodo do;end;  end; }.to raise_error 'No puede crearse un trait sin nombre'
+
+  end
+
+  it 'Construir un trait con un bloque y especificar un metodo sin mandarle un bloque para el cuerpo tira excepcion' do
+
+    expect {
+
+      TraitBuilder.conBloque do
+        nombre :UnTrait
+
+        metodo :metodo_que_no_le_paso_bloque
+
+      end
+
+    }.to raise_error 'No puede definirse un metodo sin pasarle un bloque en metodo_que_no_le_paso_bloque'
+
+  end
+
 
 end
