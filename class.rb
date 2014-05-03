@@ -26,12 +26,9 @@ class Class
     #solo quiero definir en la clase los metodos que no esten en la clase
     metodosSeleccionados = metodosDeTraits.keys - metodosDeClase
 
-    #eligo los metodos que quedaron seleccionados entre lo de los traits
-    metodosAImplementar = metodosDeTraits.select { |nombre, cuerpo| metodosSeleccionados.include? nombre  }
-
-    #define metodos con los nombres y los bloques del hash resultante
-    metodosAImplementar.each{ |nombreMetodo, cuerpoMetodo|
-      define_method nombreMetodo, cuerpoMetodo
+    #define metodos con los nombres y los bloques del hash resultante si el metodo fue seleccionado
+    metodosDeTraits.each{ |nombreMetodo, cuerpoMetodo|
+      define_method nombreMetodo, cuerpoMetodo if metodosSeleccionados.include? nombreMetodo
     }
 
   end
