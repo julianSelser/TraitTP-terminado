@@ -21,7 +21,7 @@ class Class
     metodosDeTraits = aplanar traits
 
     #los metodos de la clase [symbol,..]
-    metodosDeClase = self.methods(false)
+    metodosDeClase = self.methods()
 
     #solo quiero definir en la clase los metodos que no esten en la clase
     metodosSeleccionados = metodosDeTraits.keys - metodosDeClase

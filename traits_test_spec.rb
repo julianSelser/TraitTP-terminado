@@ -1,9 +1,9 @@
-require 'rspec'
-require '.\symbol'
-require '.\estrategias'
-require '.\trait_builder'
-require '.\trait'
-require '.\class'
+gem 'rspec'
+require_relative 'symbol'
+require_relative 'estrategias'
+require_relative 'trait_builder'
+require_relative 'trait'
+require_relative 'class'
 
 #definimos un trait...
 Trait.define do
