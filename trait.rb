@@ -19,15 +19,18 @@ class Trait
   end
 
   def + otroTrait
-    trait = TraitBuilder.conTraits(self, otroTrait)
+    metodosPropios = self.metodos
+    metodosForaneos = otroTrait.metodos
 
-    #le ponemos como variables de instancia el nombre de los traits que le dan origen a la composicion
-    #nos va a servir para despues identificar ante un conflicto que traits trajeron el problema
-    #todo: quizas haya que sumarle los metodos de cada uno...
-    trait.instance_variable_set("@nombreTraitA", self.nombre )
-    trait.instance_variable_set("@nombreTraitB", otroTrait.nombre )
+    metodosUnidos=metodosPropios.merge(metodosForaneos)
 
-    return trait
+    if (metodosPropios.size+metodosForaneos.size)!=metodosUnidos.size
+      #devolver los metodos, resultado de resolver el conflicto
+      raise 'Hay metodos conflictivos entre traits'
+    end
+
+    nuevoTrait= Trait.new(:nuevo,self.metodos.merge(otroTrait.metodos))
+    nuevoTrait
   end
 
   def << simbolos

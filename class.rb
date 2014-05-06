@@ -11,44 +11,23 @@ class Class
     @estrategiaResolucion = estrategia
   end
 
-  def uses *traits
+  def uses *argumentos
 
     #si se llama a uses sin argumentos quiero que se rompa
-    raise 'No se puede llamar uses sin argumentos' if traits.empty?
+    raise 'No se puede llamar uses sin argumentos' if argumentos.empty?
     #todo: hacer que se rompa si algun argumento no es un trait
 
-    #consigo los metodos de los traits como hash {nombre=>bloqueMetodo}
-    metodosDeTraits = aplanar traits
+    #consigo los metodos del trait  como hash {nombre=>bloqueMetodo}
+    metodosDeTrait = *argumentos.first.metodos
 
     #los metodos de la clase [symbol,..]
     metodosDeClase = self.methods()
 
-    #solo quiero definir en la clase los metodos que no esten en la clase
-    metodosSeleccionados = metodosDeTraits.keys - metodosDeClase
-
     #define metodos con los nombres y los bloques del hash resultante si el metodo fue seleccionado
-    metodosDeTraits.each{ |nombreMetodo, cuerpoMetodo|
-      define_method nombreMetodo, cuerpoMetodo if metodosSeleccionados.include? nombreMetodo
-    }
+    metodosDeTrait.each do |nombreMetodo, cuerpoMetodo|
+      define_method nombreMetodo,cuerpoMetodo
+      end
 
-  end
-
-  #aplana los traits para devolver un hash de {:NombreMetodo => {..BloqueMetodo}}
-  #ve si hay conflicto entre métodos y lo maneja segun la estrategia seteada...
-  def aplanar traits
-
-    #consigo los metodos de los traits como un array de tipo: [[nombre, aridad]...]
-    metodosDeTraits = traits.inject([]){ |nombres,trait| nombres + trait.metodos.keys}
-
-    #si un par de traits repiten el nombre y aridad, hay conflicto
-    if metodosDeTraits.uniq.size!=metodosDeTraits.size
-      #devolver los metodos, resultado de resolver el conflicto
-      return self.estrategiaResolucion.resolver(traits)
-    end
-
-    #si no hubo conflicto devolvemos un hash de metodos
-    #producto de mergear todos los hashes de metodos de los traits
-    return traits.inject(Hash.new){|aplanamiento, trait| aplanamiento.merge(trait.metodos)}
   end
 
 end

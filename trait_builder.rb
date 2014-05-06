@@ -59,13 +59,4 @@ class TraitBuilder
     self.build
   end
 
-  def self.conTraits unTrait, otroTrait
-
-    @@Metodos = aplanar [unTrait, otroTrait]
-
-    @@Nombre = :SumaDeTraits
-
-    self.build
-  end
-
 end

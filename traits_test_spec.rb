@@ -156,7 +156,7 @@ describe 'Tests de traits' do #son tests de integracion...
     expect{
 
       class G
-        uses MiTrait, TraitConMetodoRepetido
+        uses MiTrait + TraitConMetodoRepetido
       end
 
     }.to raise_error 'Hay metodos conflictivos entre traits'
@@ -181,7 +181,7 @@ describe 'Tests de traits' do #son tests de integracion...
   it 'Puedo llamar a "uses" con cualquier numero de traits' do
 
     class I
-      uses TraitConRequerimiento, TraitQueLlenaRequerimiento
+      uses TraitConRequerimiento + TraitQueLlenaRequerimiento
     end
 
     objeto = I.new
