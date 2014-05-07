@@ -243,7 +243,7 @@ describe 'Test del TraitBuilder' do
 
   it 'Hacer un trait con un bloque' do
 
-    trait = TraitBuilder.conBloque { nombre :Nombre }
+    trait = TraitBuilder.new.conBloque { nombre :Nombre }
 
     trait.nombre.should == :Nombre
 
@@ -251,13 +251,13 @@ describe 'Test del TraitBuilder' do
 
   it 'Construir un trait con un bloque y no poner nombre tira excepcion' do
 
-    expect{ TraitBuilder.conBloque do;  end; }.to raise_error 'No puede crearse un trait sin nombre'
+    expect{ TraitBuilder.new.conBloque do;  end; }.to raise_error 'No puede crearse un trait sin nombre'
 
   end
 
   it 'Construir un trait con un bloque y no poner nombre, aunque pongas metodos, tira excepcion' do
 
-    expect{ TraitBuilder.conBloque do; metodo :metodo do;end;  end; }.to raise_error 'No puede crearse un trait sin nombre'
+    expect{ TraitBuilder.new.conBloque do; metodo :metodo do;end;  end; }.to raise_error 'No puede crearse un trait sin nombre'
 
   end
 
@@ -265,7 +265,7 @@ describe 'Test del TraitBuilder' do
 
     expect {
 
-      TraitBuilder.conBloque do
+      TraitBuilder.new.conBloque do
         nombre :UnTrait
 
         metodo :metodo_que_no_le_paso_bloque

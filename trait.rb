@@ -5,9 +5,9 @@ class Trait
   def Trait.define &bloque
 
     #excepcion si no se pasa un bloque - no se deberia llamar sin bloque
-    raise 'Define invocado sin un bloque' if !block_given?
+    raise 'Define invocado sin un bloque' unless block_given?
 
-    trait = TraitBuilder.conBloque &bloque
+    trait = TraitBuilder.new.conBloque &bloque
 
     #setea el trait como una constante para poder ser usado en las clases
     Object.const_set(trait.nombre, trait)
@@ -15,7 +15,7 @@ class Trait
   end
 
   def - symboloMetodo
-    TraitBuilder.sinMetodo(self, symboloMetodo)
+    TraitBuilder.new.sinMetodo(self, symboloMetodo)
   end
 
   def + otroTrait
@@ -34,7 +34,7 @@ class Trait
   end
 
   def << simbolos
-    TraitBuilder.renombrandoMetodos(self, simbolos)
+    TraitBuilder.new.renombrandoMetodos(self, simbolos)
   end
 
   def initialize (nombre, metodosHash)
