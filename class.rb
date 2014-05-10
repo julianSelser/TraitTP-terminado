@@ -11,14 +11,10 @@ class Class
     @estrategiaResolucion = estrategia
   end
 
-  def uses *argumentos
-
-    #si se llama a uses sin argumentos quiero que se rompa
-    raise 'No se puede llamar uses sin argumentos' if argumentos.empty?
-    #todo: hacer que se rompa si algun argumento no es un trait
+  def uses trait
 
     #consigo los metodos del trait  como hash {nombre=>bloqueMetodo}
-    metodosDeTrait = *argumentos.first.metodos
+    metodosDeTrait = trait.metodos
 
     #los metodos de la clase [symbol,..]
     metodosDeClase = self.methods()
@@ -26,7 +22,7 @@ class Class
     #define metodos con los nombres y los bloques del hash resultante si el metodo fue seleccionado
     metodosDeTrait.each do |nombreMetodo, cuerpoMetodo|
       define_method nombreMetodo,cuerpoMetodo
-      end
+    end
 
   end
 
