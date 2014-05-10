@@ -6,7 +6,7 @@ require_relative 'class'
 
 #definimos un trait...
 Trait.define do
-  nombre :MiTrait
+  nombrar :MiTrait
 
   metodo :metodo1 do
     "hola"
@@ -20,7 +20,7 @@ end
 
 #estre trait tiene el mismo 'metodo1' que el trait definido arriba
 Trait.define do
-  nombre :TraitConMetodoRepetido
+  nombrar :TraitConMetodoRepetido
 
   metodo :metodo1 do
     "mundo"
@@ -29,7 +29,7 @@ end
 
 #el chiste de este trait es que llama a un metodo 'requerimiento' sin definirlo
 Trait.define do
-  nombre :TraitConRequerimiento
+  nombrar :TraitConRequerimiento
 
   metodo :metodoConRequerimiento do
     requerimiento
@@ -39,7 +39,7 @@ end
 
 #otro trait con un metodo que devuelve un string, va a jugar con el trait de arriba
 Trait.define do
-  nombre :TraitQueLlenaRequerimiento
+  nombrar :TraitQueLlenaRequerimiento
 
   metodo :requerimiento do
     "requerimiento cumplido"
@@ -138,31 +138,6 @@ describe 'Tests de traits' do #son tests de integracion...
 
   end
 
-  it 'No se puede llamar "uses" sin argumentos en la definicion de una clase' do
-
-    expect{
-
-    class F
-      uses #no le mando nada por parametro
-    end
-
-    }.to raise_error 'No se puede llamar uses sin argumentos'
-
-  end
-
-  it 'Cuando se repite el nombre de un metodo en un trait hay una excepcion' do
-
-    expect{
-
-      class G
-        uses MiTrait + TraitConMetodoRepetido
-      end
-
-    }.to raise_error 'Hay metodos conflictivos entre traits'
-
-
-  end
-
   it 'Metodo con otro metodo como requerimiento, pincha si no esta definido' do
 
     class H
@@ -200,18 +175,6 @@ describe 'Tests de traits' do #son tests de integracion...
 
   end
 
-  it 'La suma se rompe si hay definidos metodos iguales' do
-
-    expect{
-
-      class J
-        uses MiTrait + MiTrait
-      end
-
-    }.to raise_error 'Hay metodos conflictivos entre traits'
-
-  end
-
   it 'La resta remueve metodos' do
 
     class K
@@ -235,45 +198,5 @@ describe 'Tests de traits' do #son tests de integracion...
     o.saludo.should == "hola"
 
   end
-
-end
-
-describe 'Test del TraitBuilder' do
-
-  it 'Hacer un trait con un bloque' do
-
-    trait = TraitBuilder.new.conBloque { nombre :Nombre }
-
-    trait.nombre.should == :Nombre
-
-  end
-
-  it 'Construir un trait con un bloque y no poner nombre tira excepcion' do
-
-    expect{ TraitBuilder.new.conBloque do;  end; }.to raise_error 'No puede crearse un trait sin nombre'
-
-  end
-
-  it 'Construir un trait con un bloque y no poner nombre, aunque pongas metodos, tira excepcion' do
-
-    expect{ TraitBuilder.new.conBloque do; metodo :metodo do;end;  end; }.to raise_error 'No puede crearse un trait sin nombre'
-
-  end
-
-  it 'Construir un trait con un bloque y especificar un metodo sin mandarle un bloque para el cuerpo tira excepcion' do
-
-    expect {
-
-      TraitBuilder.new.conBloque do
-        nombre :UnTrait
-
-        metodo :metodo_que_no_le_paso_bloque
-
-      end
-
-    }.to raise_error 'No puede definirse un metodo sin pasarle un bloque en metodo_que_no_le_paso_bloque'
-
-  end
-
 
 end
