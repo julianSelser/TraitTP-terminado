@@ -4,24 +4,28 @@ class Trait
 
   def Trait.define &bloque
 
-    trait = Trait.new &bloque
+    raise 'Define invocado sin un bloque' unless block_given?
+
+    trait = Trait.new
+
+    #el trait evalua el bloque pasado al define(con su nombre y metodos)
+    trait.instance_eval &bloque
 
     #setea el trait como una constante para poder ser usado en las clases
     Object.const_set(trait.nombre, trait)
-
   end
 
   def - metodo
     #retiramos del hash el metodo si es 'nombreMetodo'
     metodosSinMetodo = self.metodos.reject{|nombreMetodo, bloque| nombreMetodo == metodo}
 
-    Trait.new(nombre, metodosSinMetodo)
+    Trait.new(self.nombre, metodosSinMetodo)
   end
 
   def + otroTrait
     #mergeamos los metodos del trait con el del trait pasado
     #todo: hay que acumular conflictos de alguna forma
-    Trait.new(:nuevo,self.metodos.merge(otroTrait.metodos))
+    Trait.new(:nuevo, self.metodos.merge(otroTrait.metodos))
   end
 
   def << nombres
@@ -33,11 +37,9 @@ class Trait
     Trait.new(self.nombre, metodosTraitElegido)
   end
 
-  def initialize nombre = nil, metodosHash = Hash.new, &bloque
-    self.nombre  = nombre
+  def initialize nombre = nil, metodosHash = Hash.new
+    self.nombre = nombre
     self.metodos = metodosHash
-
-    self.instance_eval(bloque) if block_given?
   end
 
   def metodo nombreMetodo, &bloque
@@ -50,6 +52,10 @@ class Trait
 
     #guardamos los metodos como clave valor, la clave es [nombre, aridad]
     @metodos[nombreMetodo] = bloque
+  end
+
+  def nombrar nombre
+    self.nombre = nombre
   end
 
 end
