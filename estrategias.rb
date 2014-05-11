@@ -31,8 +31,10 @@ Estrategia.define do
     metodo1=evaluar unMetodo
     metodo2=evaluar otroMetodo
 
-    proc {|*args| metodo1.call(*args)
-          metodo2.call(*args)}
+    proc {|*args|
+      instance_eval(&metodo1)
+      instance_eval(&metodo2)
+    }
   end
 
 end
