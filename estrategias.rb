@@ -11,9 +11,7 @@ class EstrategiaDefault
 
   #se puede refinar esto para que diga entre cuales hay conflicto
   def self.resolver(metodos)
-    metodosResueltos=metodos.clone
-    metodosResueltos.each{|mensaje, metodo| metodo.bloqueFinal }
-
+    metodos.clone
   end
 
 end
