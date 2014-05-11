@@ -76,6 +76,20 @@ Trait.define do
   end
 end
 
+Trait.define do
+  nombrar :TraitRestarGenerico
+  metodo :decrementar do |sustraendo,minuendo|
+    @resultado=minuendo-sustraendo
+  end
+end
+
+Trait.define do
+  nombrar :TraitRestaFalsa
+  metodo :decrementar do |sustraendo,minuendo|
+    @resultado=@resultado*2
+  end
+end
+
 describe 'Tests de traits' do #son tests de integracion...
 
   it 'Uso un trait en una clase y pruebo llamar a uno de sus metodos con parametros' do
@@ -288,4 +302,14 @@ describe 'Tests de traits' do #son tests de integracion...
     o.var.should==0
   end
 
+  it 'Pruebo secuencial con argumentos.' do
+    class S
+      attr_accessor :resultado
+      laEstrategiaDeResolucionEs EstrategiaSecuencial
+      uses TraitRestarGenerico+TraitRestaFalsa
+    end
+    o = S.new
+    o.decrementar 15,20
+    o.resultado.should==10
+  end
 end
