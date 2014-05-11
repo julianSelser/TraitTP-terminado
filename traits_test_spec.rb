@@ -48,6 +48,20 @@ Trait.define do
   end
 end
 
+Trait.define do
+  nombrar :TraitUno
+  metodo :a do
+    'Estoy en el trait uno'
+  end
+end
+
+Trait.define do
+  nombrar :TraitDos
+  metodo :a do
+    'Estoy en el trait dos'
+  end
+end
+
 
 describe 'Tests de traits' do #son tests de integracion...
 
@@ -199,6 +213,14 @@ describe 'Tests de traits' do #son tests de integracion...
 
     o.saludo.should == "hola"
 
+  end
+
+  it 'Se suman reiteradamente traits conflictivos' do
+    class M
+      uses TraitUno+TraitDos+TraitUno+TraitDos+TraitDos+TraitUno
+    end
+    o = M.new
+    expect{o.a}.to raise_error 'Hay metodos conflictivos entre traits'
   end
 
 end
