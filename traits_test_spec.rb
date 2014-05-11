@@ -3,6 +3,8 @@ require_relative 'symbol'
 require_relative 'estrategias'
 require_relative 'trait'
 require_relative 'class'
+require_relative 'metodo_simple'
+require_relative 'metodo_conflictivo'
 
 #definimos un trait...
 Trait.define do

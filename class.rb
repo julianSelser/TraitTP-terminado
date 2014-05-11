@@ -2,7 +2,7 @@ class Class
 
   def estrategiaResolucion
 
-    return EstrategiaStandard if @estrategiaResolucion.nil?
+    return EstrategiaDefault if @estrategiaResolucion.nil?
 
     @estrategiaResolucion
   end
@@ -13,15 +13,14 @@ class Class
 
   def uses trait
 
-    #consigo los metodos del trait  como hash {nombre=>bloqueMetodo}
-    metodosDeTrait = trait.metodos
-
     #los metodos de la clase [symbol,..]
     metodosDeClase = self.methods()
 
+    metodosAAgregar=self.estrategiaResolucion.resolver(trait.metodos)
+
     #define metodos con los nombres y los bloques del hash resultante si el metodo fue seleccionado
-    metodosDeTrait.each do |nombreMetodo, cuerpoMetodo|
-      define_method nombreMetodo,cuerpoMetodo
+    metodosAAgregar.each do |mensaje, metodo|
+      define_method mensaje,metodo.bloqueFinal
     end
 
   end

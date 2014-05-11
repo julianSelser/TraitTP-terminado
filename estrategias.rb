@@ -7,11 +7,13 @@
 # haber aplicado algebras, etc.
 
 
-class EstrategiaStandard
+class EstrategiaDefault
 
   #se puede refinar esto para que diga entre cuales hay conflicto
-  def self.resolver(*traits)
-    raise 'Hay metodos conflictivos entre traits'
+  def self.resolver(metodos)
+    metodosResueltos=metodos.clone
+    metodosResueltos.each{|mensaje, metodo| metodo.bloqueFinal }
+
   end
 
 end

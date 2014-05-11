@@ -2,7 +2,7 @@ class Trait
 
   attr_accessor :nombre, :metodos
 
-  def Trait.define &bloque
+  def self.define &bloque
 
     raise 'Define invocado sin un bloque' unless block_given?
 
@@ -23,9 +23,14 @@ class Trait
   end
 
   def + otroTrait
-    #mergeamos los metodos del trait con el del trait pasado
-    #todo: hay que acumular conflictos de alguna forma
-    Trait.new(:nuevo, self.metodos.merge(otroTrait.metodos))
+
+    metodosAAgregarPropios=self.metodos.clone
+    metodosAAgregarAjenos=otroTrait.metodos.clone
+
+    traitResultante=Trait.new(:nuevo,metodosAAgregarPropios)
+    metodosAAgregarAjenos.each{|mensaje,metodoClasificado| traitResultante.agregarMetodoClasificado(mensaje,metodoClasificado) }
+
+    traitResultante
   end
 
   def << nombres
@@ -43,15 +48,19 @@ class Trait
   end
 
   def metodo nombreMetodo, &bloque
-
     #chequeamos que se le este pasando un bloque
     raise "No puede definirse un metodo sin pasarle un bloque en #{nombreMetodo}" if !block_given?
 
-    #chequeamos que no se repita el metodo
-    raise "El metodo #{nombreMetodo} se encuentra repetido" if @metodos.has_key?(nombreMetodo)
+    metodo_nuevo=Metodo_simple.new(nombreMetodo, bloque)
+    agregarMetodoClasificado(nombreMetodo,metodo_nuevo)
+  end
 
-    #guardamos los metodos como clave valor, la clave es [nombre, aridad]
-    @metodos[nombreMetodo] = bloque
+  def agregarMetodoClasificado (mensaje,metodoClasificado)
+   if @metodos.has_key?(mensaje)
+     @metodos[mensaje]=Metodo_conflictivo.new(mensaje,[@metodos[mensaje],metodoClasificado])
+   else
+     @metodos[mensaje]=metodoClasificado
+   end
   end
 
   def nombrar nombre
