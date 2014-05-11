@@ -276,4 +276,16 @@ describe 'Tests de traits' do #son tests de integracion...
     o.var.should==0
   end
 
+  it 'Prueba que se secuencializen 3.' do
+    class R
+      attr_accessor :var
+      laEstrategiaDeResolucionEs EstrategiaSecuencial
+      uses TraitParaRestarUno+TraitParaRestarDos+TraitParaRestarUno
+    end
+    o = R.new
+    o.var=4
+    o.decrementar
+    o.var.should==0
+  end
+
 end
