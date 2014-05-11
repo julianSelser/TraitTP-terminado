@@ -28,7 +28,7 @@ class Trait
     metodosAAgregarAjenos=otroTrait.metodos.clone
 
     traitResultante=Trait.new(:nuevo,metodosAAgregarPropios)
-    metodosAAgregarAjenos.each{|mensaje,metodoClasificado| traitResultante.agregarMetodoClasificado(mensaje,metodoClasificado) }
+    metodosAAgregarAjenos.each{|mensaje,metodoClasificado| traitResultante.agregarMetodoClasificado(mensaje,metodoClasificado)}
 
     traitResultante
   end

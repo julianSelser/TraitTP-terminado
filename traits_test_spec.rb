@@ -62,6 +62,19 @@ Trait.define do
   end
 end
 
+Trait.define do
+  nombrar :TraitParaRestarUno
+  metodo :decrementar do
+    self.var=self.var-1
+  end
+end
+
+Trait.define do
+  nombrar :TraitParaRestarDos
+  metodo :decrementar do
+    self.var=self.var-2
+  end
+end
 
 describe 'Tests de traits' do #son tests de integracion...
 
@@ -249,6 +262,18 @@ describe 'Tests de traits' do #son tests de integracion...
     end
     o=P.new
     o.a.should=="Estoy en el trait uno"
+  end
+
+  it 'Prueba de la estrategia secuencial' do
+    class Q
+      attr_accessor :var
+      laEstrategiaDeResolucionEs EstrategiaSecuencial
+      uses TraitParaRestarUno+TraitParaRestarDos
+    end
+    o = Q.new
+    o.var=3
+    o.decrementar
+    o.var.should==0
   end
 
 end

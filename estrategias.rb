@@ -11,10 +11,7 @@ class Estrategia
   end
 
   def forma_de_resolver &bloque
-    @comportamiento=bloque
-    def self.resolver(unMetodo,otroMetodo)
-      @comportamiento.call(unMetodo,otroMetodo)
-    end
+    define_singleton_method(:resolver,bloque)
   end
 
   def evaluar metodo
@@ -27,18 +24,27 @@ class Estrategia
 end
 
 Estrategia.define do
+
   nombre :EstrategiaSecuencial
+
   forma_de_resolver do |unMetodo,otroMetodo|
-    evaluar unMetodo
-    evaluar otroMetodo
+    metodo1=evaluar unMetodo
+    metodo2=evaluar otroMetodo
+
+    proc {|*args| metodo1.call(*args)
+          metodo2.call(*args)}
   end
+
 end
 
 Estrategia.define do
+
   nombre :EstrategiaDefault
+
   forma_de_resolver do |unMetodo,otroMetodo|
     proc {raise 'Hay metodos conflictivos entre traits'}
   end
+
 end
 
 
