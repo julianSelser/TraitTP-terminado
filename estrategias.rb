@@ -1,17 +1,44 @@
-# Todas las estrategias deben devolver un hash con los nombres de todos los metodos
-# de los traits inplicados en la resolucion del conflicto. la forma del hash es:
-#     { nombreMetodo1 => bloqueMetodo1, nombreMetodo2 => bloqueMetodo2, ...}
-#
-# Esto se logra en el metodo resolver que es llamado en la deteccion de conflictos.
-# El metodo resolver recibe todos los traits que va a usar una clase luego de
-# haber aplicado algebras, etc.
+# La estrategia debe definir el bloqueFinal de cada objeto metodo.
+class Estrategia
+  attr_accessor :name, :comportamiento
+  def self.define &bloque
+    raise 'Define invocado sin un bloque' unless block_given?
 
+    estrategia = self.new
+    estrategia.instance_eval &bloque
 
-class EstrategiaDefault
-
-  #se puede refinar esto para que diga entre cuales hay conflicto
-  def self.resolver(metodos)
-    metodos.clone
+    Object.const_set(estrategia.name, estrategia)
   end
 
+  def forma_de_resolver &bloque
+    @comportamiento=bloque
+    def self.resolver(unMetodo,otroMetodo)
+      @comportamiento.call(unMetodo,otroMetodo)
+    end
+  end
+
+  def evaluar metodo
+    metodo.resolveteCon self
+  end
+
+  def nombre algo
+    self.name= algo
+  end
 end
+
+Estrategia.define do
+  nombre :EstrategiaSecuencial
+  forma_de_resolver do |unMetodo,otroMetodo|
+    evaluar unMetodo
+    evaluar otroMetodo
+  end
+end
+
+Estrategia.define do
+  nombre :EstrategiaDefault
+  forma_de_resolver do |unMetodo,otroMetodo|
+    proc {raise 'Hay metodos conflictivos entre traits'}
+  end
+end
+
+

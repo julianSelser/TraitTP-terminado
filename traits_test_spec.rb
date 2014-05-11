@@ -223,4 +223,32 @@ describe 'Tests de traits' do #son tests de integracion...
     expect{o.a}.to raise_error 'Hay metodos conflictivos entre traits'
   end
 
+  it 'Prueba basica de agregar un trait.' do
+    class N
+      uses TraitUno
+    end
+    o = N.new
+    o.a.should =='Estoy en el trait uno'
+  end
+
+  it 'Pruebo si prioriza los metodos ya establecidos en la clase.' do
+    class O
+      def a
+        "Salio bien."
+      end
+      uses TraitUno
+    end
+    o=O.new
+    o.a.should=="Salio bien."
+  end
+
+  it 'Pruebo si prioriza los metodos definidos por un trait previo.' do
+    class P
+      uses TraitUno
+      uses TraitDos
+    end
+    o=P.new
+    o.a.should=="Estoy en el trait uno"
+  end
+
 end

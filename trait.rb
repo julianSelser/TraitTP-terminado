@@ -57,7 +57,7 @@ class Trait
 
   def agregarMetodoClasificado (mensaje,metodoClasificado)
    if @metodos.has_key?(mensaje)
-     @metodos[mensaje]=Metodo_conflictivo.new(mensaje,[@metodos[mensaje],metodoClasificado])
+     @metodos[mensaje]=Metodo_conflictivo.new(mensaje,@metodos[mensaje],metodoClasificado)
    else
      @metodos[mensaje]=metodoClasificado
    end

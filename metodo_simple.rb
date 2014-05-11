@@ -4,4 +4,8 @@ class Metodo_simple
     @mensaje = mensaje
     @bloqueFinal=bloque
   end
+
+  def resolveteCon estrategia
+    self.bloqueFinal
+  end
 end
