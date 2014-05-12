@@ -1,14 +1,8 @@
-# La estrategia debe definir el bloqueFinal de cada objeto metodo.
+require_relative 'modulo_definidor'
+
 class Estrategia
-  attr_accessor :name, :comportamiento
-  def self.define &bloque
-    raise 'Define invocado sin un bloque' unless block_given?
-
-    estrategia = self.new
-    estrategia.instance_eval &bloque
-
-    Object.const_set(estrategia.name, estrategia)
-  end
+  extend Definidor
+  attr_accessor :nombre, :comportamiento
 
   def forma_de_resolver &bloque
     define_singleton_method(:resolver,bloque)
@@ -18,14 +12,15 @@ class Estrategia
     metodo.resolveteCon self
   end
 
-  def nombre algo
-    self.name= algo
+  def nombrar nombre
+    self.nombre =nombre
   end
+
 end
 
 Estrategia.define do
 
-  nombre :EstrategiaSecuencial
+  nombrar :EstrategiaSecuencial
 
   forma_de_resolver do |unMetodo,otroMetodo|
     metodo1=evaluar unMetodo
@@ -41,7 +36,7 @@ end
 
 Estrategia.define do
 
-  nombre :EstrategiaDefault
+  nombrar :EstrategiaDefault
 
   forma_de_resolver do |unMetodo,otroMetodo|
     proc {raise 'Hay metodos conflictivos entre traits'}

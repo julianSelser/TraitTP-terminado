@@ -1,19 +1,8 @@
+require_relative 'modulo_definidor'
+
 class Trait
-
+  extend Definidor
   attr_accessor :nombre, :metodos
-
-  def self.define &bloque
-
-    raise 'Define invocado sin un bloque' unless block_given?
-
-    trait = Trait.new
-
-    #el trait evalua el bloque pasado al define(con su nombre y metodos)
-    trait.instance_eval &bloque
-
-    #setea el trait como una constante para poder ser usado en las clases
-    Object.const_set(trait.nombre, trait)
-  end
 
   def - metodo
     #retiramos del hash el metodo si es 'nombreMetodo'
