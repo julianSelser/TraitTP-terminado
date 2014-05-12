@@ -238,6 +238,7 @@ describe 'Tests de traits' do #son tests de integracion...
 
     o = L.new
 
+    o.metodo1.should == "hola"
     o.saludo.should == "hola"
 
   end
