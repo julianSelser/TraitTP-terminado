@@ -312,4 +312,16 @@ describe 'Tests de traits' do #son tests de integracion...
     o.decrementar 15,20
     o.resultado.should==10
   end
+
+  it 'En ejecucion le agrego un metodo al trait' do
+    TraitParaRestarUno.metodo :nuevoMetodo do
+      'Soy un metodo hecho al vuelo.'
+    end
+    class T
+      uses TraitParaRestarUno
+    end
+    o=T.new
+    o.nuevoMetodo.should=='Soy un metodo hecho al vuelo.'
+  end
+
 end

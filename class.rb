@@ -20,7 +20,6 @@ class Class
     metodosAAgregar.each do |mensaje, metodo|
       define_method mensaje,metodo unless self.method_defined? mensaje
     end
-
   end
 
 end

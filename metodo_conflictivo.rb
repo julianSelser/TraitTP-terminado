@@ -1,6 +1,6 @@
 class Metodo_conflictivo < Metodo_simple
   def initialize mensaje, unBloque, otroBloque
-    @mensaje=mensaje
+    self.mensaje=mensaje
     @bloques=[unBloque, otroBloque]
   end
 
