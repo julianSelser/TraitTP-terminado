@@ -65,8 +65,13 @@ class Trait
   def modificarMetodo mensaje, &bloque
     raise 'Se pide modificar un metodo inexistente.' unless self.metodos.has_key? mensaje
 
-    self.metodos[mensaje]=bloque
-    self.clasesQueLoUsan.each{|clase|clase.actualizarMetodo mensaje,self.metodos[mensaje]}
+    self.metodos[mensaje]=Metodo_simple.new(mensaje,bloque)
+    self.clasesQueLoUsan.each{|clase|clase.actualizarMetodo mensaje,self.metodos[mensaje].bloqueFinal}
+  end
+
+  def resolver_conflictos_con estrategia
+    self.metodos.each{|mensaje,metodo|self.metodos[mensaje]=self.metodos[mensaje].simplificate_con estrategia}
+    self
   end
 
 end

@@ -8,4 +8,8 @@ class Metodo_simple
   def resolveteCon estrategia
     self.bloqueFinal
   end
+
+  def simplificate_con estrategia
+    self
+  end
 end

@@ -353,4 +353,15 @@ describe 'Tests de traits' do #son tests de integracion...
     expect{TraitParaRestarUno.modificarMetodo :metodoInexistente do'Hello World!'end}.to raise_error 'Se pide modificar un metodo inexistente.'
   end
 
+  it 'Especifico como quiero que se resuelva un resultado de operacion.' do
+    class W
+      attr_accessor :var
+      uses (TraitParaRestarUno+TraitParaRestarDos).resolver_conflictos_con EstrategiaSecuencial
+    end
+    o=W.new
+    o.var=10
+    o.decrementar
+    o.var.should==7
+  end
+
 end
