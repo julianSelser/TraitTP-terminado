@@ -23,9 +23,9 @@ class Trait
   end
 
   def << nombres
-    #creo un nuevo hash con el del trait y reemplazo la key con el nombre nuevo
+    #creo un nuevo hash con el del trait y pongo otra key con el nombre nuevo y el cuerpo del metodo elegido
     metodosTraitElegido = Hash.new.merge(self.metodos)
-    metodosTraitElegido[nombres.nombreNuevo] = metodosTraitElegido.delete(nombres.nombreAnterior)
+    metodosTraitElegido[nombres.nombreNuevo] = metodosTraitElegido[nombres.nombreAnterior]
 
     #devuelvo un nuevo trait con el mismo nombre pero con el metodo renombrado
     Trait.new(self.nombre, metodosTraitElegido)
