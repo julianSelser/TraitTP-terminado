@@ -2,7 +2,7 @@ require_relative 'modulo_definidor'
 
 class Trait
   extend Definidor
-  attr_accessor :nombre, :metodos
+  attr_accessor :nombre, :metodos, :clasesQueLoUsan
 
   def - metodo
     #retiramos del hash el metodo si es 'nombreMetodo'
@@ -34,12 +34,14 @@ class Trait
   def initialize nombre = nil, metodosHash = Hash.new
     self.nombre = nombre
     self.metodos = metodosHash
+    self.clasesQueLoUsan=[]
   end
 
   def metodo nombreMetodo, &bloque
     #chequeamos que se le este pasando un bloque
     raise "No puede definirse un metodo sin pasarle un bloque en #{nombreMetodo}" if !block_given?
 
+    self.clasesQueLoUsan.each{|clase| clase.actualizarMetodo nombreMetodo,bloque}
     metodo_nuevo=Metodo_simple.new(nombreMetodo, bloque)
     agregarMetodoClasificado(nombreMetodo,metodo_nuevo)
   end
@@ -54,6 +56,10 @@ class Trait
 
   def nombrar nombre
     self.nombre = nombre
+  end
+
+  def sosUsadoPor unaClase
+    self.clasesQueLoUsan<<unaClase
   end
 
 end
