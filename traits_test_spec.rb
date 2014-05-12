@@ -348,4 +348,8 @@ describe 'Tests de traits' do #son tests de integracion...
     o.arrepentirse.should=='No resto mas.'
   end
 
+  it 'Rompe al intentar modificar un metodo iunexistente' do
+    expect{TraitParaRestarUno.modificarMetodo :metodoInexistente do'Hello World!'end}.to raise_error 'Se pide modificar un metodo inexistente.'
+  end
+
 end
