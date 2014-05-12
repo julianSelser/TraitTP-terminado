@@ -324,7 +324,7 @@ describe 'Tests de traits' do #son tests de integracion...
     o.nuevoMetodo.should=='Soy un metodo hecho al vuelo.'
   end
 
-  it 'En ejecucion se agrega un metodo al trait y la clase se corresponde' do
+  it 'En ejecucion se agrega un metodo al trait y la clase se corresponde.' do
     class U
       uses TraitParaRestarUno
     end
@@ -333,6 +333,19 @@ describe 'Tests de traits' do #son tests de integracion...
     end
     o=U.new
     o.arrepentirse.should=='Perdon no te quise restar uno.'
+  end
+
+  it 'En ejecucion se modifica un metodo de un trait y la clase se corresponde.' do
+    class V
+      uses TraitParaRestarUno
+    end
+    o=V.new
+
+    TraitParaRestarUno.modificarMetodo :arrepentirse do
+      'No resto mas.'
+    end
+
+    o.arrepentirse.should=='No resto mas.'
   end
 
 end
