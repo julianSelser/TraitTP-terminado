@@ -1,12 +1,12 @@
 class Class
 
-  def laEstrategiaDeResolucionEs unaEstrategia
-    @estrategiaResolucion =unaEstrategia
+  def getEstrategia
+    return EstrategiaDefault if @estrategia.nil?
+    @estrategia
   end
 
-  def estrategia
-    return EstrategiaDefault if @estrategiaResolucion.nil?
-    @estrategiaResolucion
+  def estrategia unaEstrategia
+    @estrategia = unaEstrategia
   end
 
   def uses trait
@@ -15,7 +15,7 @@ class Class
     trait.sosUsadoPor self
 
     metodosAAgregar=trait.metodos.clone
-    metodosAAgregar.each {|mensaje,metodo|metodosAAgregar[mensaje]=metodo.resolveteCon(self.estrategia)}
+    metodosAAgregar.each {|mensaje,metodo|metodosAAgregar[mensaje]=metodo.resolveteCon(getEstrategia)}
 
     #define metodos con los nombres y los bloques del hash resultante si el metodo fue seleccionado
     metodosAAgregar.each do |mensaje, metodo|
