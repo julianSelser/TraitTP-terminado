@@ -45,7 +45,6 @@ Trait.define do
   metodo :metodoConRequerimiento do
     requerimiento
   end
-
 end
 
 #otro trait con un metodo que devuelve un string, va a jugar con el trait de arriba
@@ -59,6 +58,7 @@ end
 
 Trait.define do
   nombrar :TraitUno
+
   metodo :a do
     'Estoy en el trait uno'
   end
@@ -66,6 +66,7 @@ end
 
 Trait.define do
   nombrar :TraitDos
+
   metodo :a do
     'Estoy en el trait dos'
   end
@@ -73,6 +74,7 @@ end
 
 Trait.define do
   nombrar :TraitParaRestarUno
+
   metodo :decrementar do
     self.var=self.var-1
   end
@@ -80,6 +82,7 @@ end
 
 Trait.define do
   nombrar :TraitParaRestarDos
+
   metodo :decrementar do
     self.var=self.var-2
   end
@@ -87,6 +90,7 @@ end
 
 Trait.define do
   nombrar :TraitRestarGenerico
+
   metodo :decrementar do |sustraendo,minuendo|
     @resultado=minuendo-sustraendo
   end
@@ -94,6 +98,7 @@ end
 
 Trait.define do
   nombrar :TraitRestaFalsa
+
   metodo :decrementar do |sustraendo,minuendo|
     @resultado=@resultado*2
   end
@@ -107,10 +112,10 @@ describe 'Tests de traits' do #son tests de integracion...
       uses MiTrait
     end
 
-    objeto = A.new
+    o = A.new
 
     #el metodo2 tomando el paramatro...siempre devuelve 42
-    objeto.metodo2(1000).should == 42
+    o.metodo2(1000).should == 42
 
   end
 
@@ -125,10 +130,10 @@ describe 'Tests de traits' do #son tests de integracion...
     end
 
     #instanciamos la UnaClase
-    prueba = B.new
+    o = B.new
 
     #el trait devuelto es el mismo
-    prueba.trait.nombre.should == :MiTrait
+    o.trait.nombre.should == :MiTrait
 
   end
 
@@ -154,9 +159,9 @@ describe 'Tests de traits' do #son tests de integracion...
       uses MiTrait
     end
 
-    objeto = D.new
+    o = D.new
 
-    objeto.metodo1.should == "hola"
+    o.metodo1.should == "hola"
 
   end
 
@@ -172,9 +177,9 @@ describe 'Tests de traits' do #son tests de integracion...
 
     end
 
-    objeto = E.new
+    o = E.new
 
-    objeto.metodo1.should == "metodo definido en la clase"
+    o.metodo1.should == "metodo definido en la clase"
 
   end
 
@@ -196,10 +201,10 @@ describe 'Tests de traits' do #son tests de integracion...
       uses TraitConRequerimiento
     end
 
-    objeto = H.new
+    o = H.new
 
     #el 'name error' es una excepcion para cuando no esta definido un metodo
-    expect{ objeto.metodoConRequerimiento }.to raise_error NameError
+    expect{ o.metodoConRequerimiento }.to raise_error NameError
 
   end
 
@@ -210,9 +215,9 @@ describe 'Tests de traits' do #son tests de integracion...
       uses TraitConRequerimiento + TraitQueLlenaRequerimiento
     end
 
-    objeto = I.new
+    o = I.new
 
-    objeto.metodoConRequerimiento.should == "requerimiento cumplido"
+    o.metodoConRequerimiento.should == "requerimiento cumplido"
 
 
   end
@@ -291,7 +296,7 @@ describe 'Tests de traits' do #son tests de integracion...
   it 'Prueba de la estrategia secuencial' do
     class Q
       attr_accessor :var
-      laEstrategiaDeResolucionEs EstrategiaSecuencial
+      estrategia EstrategiaSecuencial
       uses TraitParaRestarUno+TraitParaRestarDos
     end
     o = Q.new
@@ -303,7 +308,7 @@ describe 'Tests de traits' do #son tests de integracion...
   it 'Prueba que se secuencializen 3.' do
     class R
       attr_accessor :var
-      laEstrategiaDeResolucionEs EstrategiaSecuencial
+      estrategia EstrategiaSecuencial
       uses TraitParaRestarUno+TraitParaRestarDos+TraitParaRestarUno
     end
     o = R.new
@@ -315,7 +320,7 @@ describe 'Tests de traits' do #son tests de integracion...
   it 'Pruebo secuencial con argumentos.' do
     class S
       attr_accessor :resultado
-      laEstrategiaDeResolucionEs EstrategiaSecuencial
+      estrategia EstrategiaSecuencial
       uses TraitRestarGenerico+TraitRestaFalsa
     end
     o = S.new
@@ -358,7 +363,7 @@ describe 'Tests de traits' do #son tests de integracion...
     o.arrepentirse.should=='No resto mas.'
   end
 
-  it 'Rompe al intentar modificar un metodo iunexistente' do
+  it 'Rompe al intentar modificar un metodo inexistente' do
     expect{TraitParaRestarUno.modificarMetodo :metodoInexistente do'Hello World!'end}.to raise_error 'Se pide modificar un metodo inexistente.'
   end
 
@@ -372,57 +377,66 @@ describe 'Tests de traits' do #son tests de integracion...
     o.decrementar
     o.var.should==7
   end
-  it ' usa estrategiaFold' do
-      class Sarlanga
-        laEstrategiaDeResolucionEs EstrategiaFold
-        estrategia.comportamiento= lambda {|n,m| n*m }
+
+  it 'usa estrategiaFold' do
+      class X
+        estrategia EstrategiaFold.con_funcion {|n,m| n*m }
         uses MiTrait+MiTrait+MiTrait
       end
 
-    @algun_lado = Sarlanga.new
-    (@algun_lado.metodo2 13298731).should == 74088
-    end
-
-  it ' usa estrategiaUntil y devuelve el segundo' do
-    class Sarlanga
-      laEstrategiaDeResolucionEs EstrategiaUntil
-      estrategia.comportamiento= lambda {|n| n.length > 4 }
-      uses MiTrait+TraitConMetodoRepetido
-    end
-
-    @algun_lado = Sarlanga.new
-    (@algun_lado.metodo1).should == "mundo"
+    o = X.new
+    o.metodo2(123).should == 74088
   end
 
-  it ' usa estrategiaUntil devuelve el primero' do
-    class Sarlanga
-      laEstrategiaDeResolucionEs EstrategiaUntil
-      estrategia.comportamiento= lambda {|n| n.length < 10 }
+  it ' usa EstrategiaSelect y devuelve el segundo' do
+    class Y
+      estrategia EstrategiaSelect.con_funcion {|n| n.length > 4 }
       uses MiTrait+TraitConMetodoRepetido
     end
 
-    @algun_lado = Sarlanga.new
-    (@algun_lado.metodo1).should == "hola"
-    class Sarlonga
-      laEstrategiaDeResolucionEs EstrategiaUntil
-      estrategia.comportamiento= lambda {|n| n.length < 10 }
+    o = Y.new
+    o.metodo1.should == "mundo"
+  end
+
+  it ' usa EstrategiaSelect devuelve el primero siempre' do
+    #ponemos dos traits con metodos repetidos, con funcion que da true tiene que traer el primero
+    class Z
+      estrategia EstrategiaSelect.con_funcion {|n| true }
+      uses MiTrait+TraitConMetodoRepetido
+    end
+
+    o = Z.new
+    o.metodo1.should == "hola"
+
+    #cambiamos el orden y vemos que efectivamente trae el primero
+    class ZA
+      estrategia EstrategiaSelect.con_funcion {|n| true }
       uses TraitConMetodoRepetido+MiTrait
     end
 
-    @algun_lado = Sarlonga.new
-    (@algun_lado.metodo1).should == "mundo"
+    o = ZA.new
+    o.metodo1.should == "mundo"
   end
 
-  it ' usa estrategiaUntil devuelve el tercero' do
-    class Sarlanga
-      laEstrategiaDeResolucionEs EstrategiaUntil
-      estrategia.comportamiento= lambda {|n| n.length >6}
+  it ' usa EstrategiaSelect devuelve el tercero' do
+    class ZB
+      estrategia EstrategiaSelect.con_funcion {|n| n.length >6}
 
       uses MiTrait+TraitConMetodoRepetido+TraitConOtroMetodoRepetido
     end
 
-    @algun_lado = Sarlanga.new
-    (@algun_lado.metodo1).should == "mundirijillo"
+    o = ZB.new
+    o.metodo1.should == "mundirijillo"
+  end
+
+  it 'usar "con_funcion" en una estrategia no la modifica a nivel global' do
+    class ZC
+      estrategia EstrategiaSelect.con_funcion {  }
+    end
+
+    EstrategiaSelect.instance_variable_defined?(:@funcion).should == false
   end
 
 end
+
+
