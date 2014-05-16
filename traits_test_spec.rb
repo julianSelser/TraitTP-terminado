@@ -29,6 +29,15 @@ Trait.define do
   end
 end
 
+#estre trait tiene el mismo 'metodo1' que el trait definido arriba
+Trait.define do
+  nombrar :TraitConOtroMetodoRepetido
+
+  metodo :metodo1 do
+    "mundirijillo"
+  end
+end
+
 #el chiste de este trait es que llama a un metodo 'requerimiento' sin definirlo
 Trait.define do
   nombrar :TraitConRequerimiento
@@ -362,6 +371,58 @@ describe 'Tests de traits' do #son tests de integracion...
     o.var=10
     o.decrementar
     o.var.should==7
+  end
+  it ' usa estrategiaFold' do
+      class Sarlanga
+        laEstrategiaDeResolucionEs EstrategiaFold
+        estrategia.comportamiento= lambda {|n,m| n*m }
+        uses MiTrait+MiTrait+MiTrait
+      end
+
+    @algun_lado = Sarlanga.new
+    (@algun_lado.metodo2 13298731).should == 74088
+    end
+
+  it ' usa estrategiaUntil y devuelve el segundo' do
+    class Sarlanga
+      laEstrategiaDeResolucionEs EstrategiaUntil
+      estrategia.comportamiento= lambda {|n| n.length > 4 }
+      uses MiTrait+TraitConMetodoRepetido
+    end
+
+    @algun_lado = Sarlanga.new
+    (@algun_lado.metodo1).should == "mundo"
+  end
+
+  it ' usa estrategiaUntil devuelve el primero' do
+    class Sarlanga
+      laEstrategiaDeResolucionEs EstrategiaUntil
+      estrategia.comportamiento= lambda {|n| n.length < 10 }
+      uses MiTrait+TraitConMetodoRepetido
+    end
+
+    @algun_lado = Sarlanga.new
+    (@algun_lado.metodo1).should == "hola"
+    class Sarlonga
+      laEstrategiaDeResolucionEs EstrategiaUntil
+      estrategia.comportamiento= lambda {|n| n.length < 10 }
+      uses TraitConMetodoRepetido+MiTrait
+    end
+
+    @algun_lado = Sarlonga.new
+    (@algun_lado.metodo1).should == "mundo"
+  end
+
+  it ' usa estrategiaUntil devuelve el tercero' do
+    class Sarlanga
+      laEstrategiaDeResolucionEs EstrategiaUntil
+      estrategia.comportamiento= lambda {|n| n.length >6}
+
+      uses MiTrait+TraitConMetodoRepetido+TraitConOtroMetodoRepetido
+    end
+
+    @algun_lado = Sarlanga.new
+    (@algun_lado.metodo1).should == "mundirijillo"
   end
 
 end
