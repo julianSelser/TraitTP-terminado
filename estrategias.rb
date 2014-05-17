@@ -42,7 +42,7 @@ end
 
 Estrategia.define do
 
-  nombrar :EstrategiaSelect
+  nombrar :EstrategiaAnySatisfy
 
   forma_de_resolver do |unMetodo,otroMetodo|
     metodo1 = evaluar unMetodo

@@ -388,9 +388,9 @@ describe 'Tests de traits' do #son tests de integracion...
     o.metodo2(123).should == 74088
   end
 
-  it ' usa EstrategiaSelect y devuelve el segundo' do
+  it ' usa EstrategiaAnySatisfy y devuelve el segundo' do
     class Y
-      estrategia EstrategiaSelect.con_funcion {|n| n.length > 4 }
+      estrategia EstrategiaAnySatisfy.con_funcion {|n| n.length > 4 }
       uses MiTrait+TraitConMetodoRepetido
     end
 
@@ -398,10 +398,10 @@ describe 'Tests de traits' do #son tests de integracion...
     o.metodo1.should == "mundo"
   end
 
-  it ' usa EstrategiaSelect devuelve el primero siempre' do
+  it ' usa EstrategiaAnySatisfy devuelve el primero siempre' do
     #ponemos dos traits con metodos repetidos, con funcion que da true tiene que traer el primero
     class Z
-      estrategia EstrategiaSelect.con_funcion {|n| true }
+      estrategia EstrategiaAnySatisfy.con_funcion {|n| true }
       uses MiTrait+TraitConMetodoRepetido
     end
 
@@ -410,7 +410,7 @@ describe 'Tests de traits' do #son tests de integracion...
 
     #cambiamos el orden y vemos que efectivamente trae el primero
     class ZA
-      estrategia EstrategiaSelect.con_funcion {|n| true }
+      estrategia EstrategiaAnySatisfy.con_funcion {|n| true }
       uses TraitConMetodoRepetido+MiTrait
     end
 
@@ -418,9 +418,9 @@ describe 'Tests de traits' do #son tests de integracion...
     o.metodo1.should == "mundo"
   end
 
-  it ' usa EstrategiaSelect devuelve el tercero' do
+  it ' usa EstrategiaAnySatisfy devuelve el tercero' do
     class ZB
-      estrategia EstrategiaSelect.con_funcion {|n| n.length >6}
+      estrategia EstrategiaAnySatisfy.con_funcion {|n| n.length >6}
 
       uses MiTrait+TraitConMetodoRepetido+TraitConOtroMetodoRepetido
     end
@@ -431,10 +431,10 @@ describe 'Tests de traits' do #son tests de integracion...
 
   it 'usar "con_funcion" en una estrategia no la modifica a nivel global' do
     class ZC
-      estrategia EstrategiaSelect.con_funcion {  }
+      estrategia EstrategiaAnySatisfy.con_funcion {  }
     end
 
-    EstrategiaSelect.instance_variable_defined?(:@funcion).should == false
+    EstrategiaAnySatisfy.instance_variable_defined?(:@funcion).should == false
   end
 
 end
