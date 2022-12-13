@@ -14,11 +14,11 @@ class Class
     trait.sosUsadoPor self
     metodosAAgregar = trait.metodos.clone
     
-    metodosAAgregar.each { |mensaje, metodo|
+    metodosAAgregar.each do |mensaje, metodo|
       metodoConEstrategia = metodo.resolveteCon(getEstrategia)
       
       define_method mensaje, metodoConEstrategia unless self.method_defined? mensaje 
-    }
+    end
   end
 
   def actualizarMetodo mensaje, metodo
