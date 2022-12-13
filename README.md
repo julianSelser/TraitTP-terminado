@@ -1,6 +1,6 @@
-#Traits para Ruby!
+# Traits para Ruby!
 
-#####Framework minimalista para tener traits en Ruby 
+##### Framework minimalista para tener traits en Ruby 
 
 
 - Enunciado
